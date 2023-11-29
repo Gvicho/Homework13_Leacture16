@@ -1,9 +1,10 @@
-package com.example.homework13_leacture16
+package com.example.homework13_leacture16.activitys
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.navigation.fragment.NavHostFragment
+import com.example.homework13_leacture16.R
 
 class MainActivity : AppCompatActivity() {
 

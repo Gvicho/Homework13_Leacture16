@@ -1,4 +1,4 @@
-package com.example.homework13_leacture16
+package com.example.homework13_leacture16.adapters
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,10 +7,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.homework13_leacture16.databinding.FieldItemBinding
+import com.example.homework13_leacture16.data.Field
+import com.example.homework13_leacture16.data.FieldStack
 import com.example.homework13_leacture16.databinding.FieldStackItemBinding
 
-class FieldStackAdapterRecycler(private val listener: ItemListener) : ListAdapter<FieldStack, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+class FieldStackAdapterRecycler(private val listener: ItemListener) : ListAdapter<FieldStack, RecyclerView.ViewHolder>(
+    DIFF_CALLBACK
+) {
     companion object {
 
         private lateinit var myAdaper: FieldAdapterRecycler
@@ -30,7 +33,7 @@ class FieldStackAdapterRecycler(private val listener: ItemListener) : ListAdapte
 
         fun bind(fieldStack: FieldStack){
 
-            myAdaper = FieldAdapterRecycler()
+            myAdaper = FieldAdapterRecycler(listener)
 
             Log.d("tag123","bind() -> ${fieldStack.id} , ${fieldStack.list.size}")
 
@@ -62,5 +65,6 @@ class FieldStackAdapterRecycler(private val listener: ItemListener) : ListAdapte
 }
 
 interface ItemListener {
-    fun onItemInput(fieldStack: FieldStack)
+    fun onItemInput(field: Field)
+    fun onItemInputChanged(input:String,field:Field)
 }

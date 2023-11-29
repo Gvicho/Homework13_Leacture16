@@ -1,19 +1,18 @@
-package com.example.homework13_leacture16
+package com.example.homework13_leacture16.adapters
 
-import android.os.Build
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.homework13_leacture16.data.Field
 import com.example.homework13_leacture16.databinding.FieldItem1Binding
 import com.example.homework13_leacture16.databinding.FieldItemBinding
-import com.example.homework13_leacture16.databinding.FieldStackItemBinding
 
 
-class FieldAdapterRecycler() : ListAdapter<Field, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+class FieldAdapterRecycler(private val listener: ItemListener) : ListAdapter<Field, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
     companion object {
 
         const val Item_Type_1 = 1
@@ -33,17 +32,37 @@ class FieldAdapterRecycler() : ListAdapter<Field, RecyclerView.ViewHolder>(DIFF_
     inner class FieldViewHolder(private val binding: FieldItemBinding): RecyclerView.ViewHolder(binding.root){
 
         fun bind(field: Field, position: Int){
+
             binding.root.hint = field.hint
+
+            //so that last field doesn't have a line under text
             if(position == currentList.size-1){
                 binding.root.background = null
             }
+
+            listener.onItemInput(field)
+
+            binding.root.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    listener.onItemInputChanged( binding.root.text.toString(),field)
+                }
+            })
+
         }
     }
 
     inner class FieldViewHolder1(private val binding: FieldItem1Binding): RecyclerView.ViewHolder(binding.root){
 
-        fun bind(field: Field, position: Int){
-
+        fun bind(field: Field){
+            listener.onItemInput(field)
         }
     }
 
@@ -79,10 +98,6 @@ class FieldAdapterRecycler() : ListAdapter<Field, RecyclerView.ViewHolder>(DIFF_
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val field= getItem(position)
         if(holder is FieldViewHolder)holder.bind(field,position)
-        else if (holder is FieldViewHolder1)holder.bind(field,position)
+        else if (holder is FieldViewHolder1)holder.bind(field)
     }
-}
-
-interface ItemListener1 {
-    fun onItemInput(field: Field)
 }

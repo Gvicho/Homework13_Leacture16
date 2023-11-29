@@ -1,4 +1,4 @@
-package com.example.homework13_leacture16
+package com.example.homework13_leacture16.data
 
 import android.os.Parcel
 import android.os.Parcelable
