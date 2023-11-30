@@ -2,6 +2,7 @@ package com.example.homework13_leacture16.adapters
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -52,6 +53,7 @@ class FieldAdapterRecycler(private val listener: ItemListener) : ListAdapter<Fie
                 }
 
                 override fun afterTextChanged(s: Editable?) {
+                    Log.d("tag123","afterTextChange -> ${binding.root.text.toString()}")
                     listener.onItemInputChanged( binding.root.text.toString(),field)
                 }
             })

@@ -3,7 +3,9 @@ package com.example.homework13_leacture16.fragments
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.homework13_leacture16.ViewModel.InputFragmentViewModel
 import com.example.homework13_leacture16.adapters.FieldStackAdapterRecycler
 import com.example.homework13_leacture16.adapters.ItemListener
 import com.example.homework13_leacture16.base_fragments.BaseFragment
@@ -17,11 +19,8 @@ class InputFragment : BaseFragment<FragmentInputBinding>(FragmentInputBinding::i
 
     private lateinit var myAdaper: FieldStackAdapterRecycler
 
-    // we gonna need it for checking the input
-    private var fieldsSize = 0
-    private var fieldsIdList = mutableListOf<Int>()
-    private var fieldIdFieldMap = mutableMapOf<Int, Field>()
-    private var fieldIdInputMap = mutableMapOf<Int,String>()
+    private val viewModel:InputFragmentViewModel by viewModels()
+
 
     companion object {
 
@@ -34,57 +33,53 @@ class InputFragment : BaseFragment<FragmentInputBinding>(FragmentInputBinding::i
             }
     }
 
+    init {
+        Log.d("tag123","Fragment Init")
+    }
+
+
+
     override fun setUp() {
         Log.d("tag123","SetUp")
 
         myAdaper = FieldStackAdapterRecycler(this)
 
-        val list = listOf(
-            FieldStack(1, listOf(Field(1,"name","input","",true,false,""))),
-            FieldStack(2, listOf(Field(2,"d","input","",false,false,""))),
-            FieldStack(3, listOf(
-                Field(3,"s","input","",true,false,""),
-                Field(4,"fd","input","",false,false,""),
-                Field(5,"sasdff","chooser","",false,false,"")
-            ))
-        )
+        bindingApplyChanges(viewModel.list)
 
-        binding.recyclerMain.apply {
-            setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL, false)
-            adapter = myAdaper
+    }
 
-        }
+    private fun bindingApplyChanges(list: List<FieldStack>){
 
-        myAdaper.submitList(list)
+        binding.apply {
 
-        binding.registrationButton1.setOnClickListener{
-            if(!validateData()){
-                Toast.makeText(this.context, "saved succesfuly", Toast.LENGTH_SHORT).show()
+            recyclerMain.apply {
+                setHasFixedSize(true)
+                layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL, false)
+                adapter = myAdaper
+
             }
-        }
 
-        binding.registrationButton.setOnClickListener{
-            if(!validateData()){
-                Toast.makeText(this.context, "saved succesfuly", Toast.LENGTH_SHORT).show()
+            myAdaper.submitList(list)
+
+            registrationButton1.setOnClickListener{
+                registrate()
+            }
+
+            registrationButton.setOnClickListener{
+                registrate()
             }
         }
     }
 
-    private fun validateData():Boolean{
-        //Log.d("tag1234","checking!!!")
-        var ans = false
-        fieldsIdList.forEach {
-            if(fieldIdFieldMap[it]!!.required){
-                ans = ans.or( (fieldIdInputMap[it]!!.isEmpty()) )
-                if(fieldIdInputMap[it]!!.isEmpty()){
-                    Toast.makeText(this.context, "${fieldIdFieldMap[it]!!.hint} field is required", Toast.LENGTH_SHORT).show()
-                }
-                //Log.d("tag1234","checked $it ${fieldsIdList.size}")
-            }
+    private fun registrate(){
+        if(!viewModel.validateData()){
+            Toast.makeText(this@InputFragment.context, "Info is saved ", Toast.LENGTH_SHORT).show()
+        }else{
+            Toast.makeText(this@InputFragment.context, "${viewModel.failedRequiredField} is required field, please fill it", Toast.LENGTH_SHORT).show()
         }
-        return ans
     }
+
+
 
     override fun initData() {
 
@@ -95,16 +90,19 @@ class InputFragment : BaseFragment<FragmentInputBinding>(FragmentInputBinding::i
     }
 
     override fun onItemInputChanged(input: String, field: Field) {
-        fieldIdInputMap[field.field_id] = input
-        Log.d("tag1234","changed  ${field.field_id} size is : ${fieldIdInputMap[field.field_id]}")
+        viewModel.fieldIdInputMap[field.field_id] = input
+        //Log.d("tag1234","changed  ${field.field_id} size is : ${viewModel.fieldIdInputMap[field.field_id]}")
     }
 
     private fun addField(field: Field){
-        Log.d("tag1234","added  ${field.field_id} size is : ${fieldsSize}")
-        fieldsIdList.add(field.field_id)
-        fieldIdFieldMap[field.field_id] = field
-        fieldIdInputMap[field.field_id] = ""
-        fieldsSize++
+        //Log.d("tag1234","added  ${field.field_id} size is : ${viewModel.fieldsSize}")
+        viewModel.addField(field)
+
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.d("tag123","onDetach()")
     }
 
 

@@ -1,12 +1,16 @@
 package com.example.homework13_leacture16.activitys
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.example.homework13_leacture16.R
 
 class MainActivity : AppCompatActivity() {
+
+    init {
+        Log.d("tag123","Activity Init")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("tag123","activityoncreate")

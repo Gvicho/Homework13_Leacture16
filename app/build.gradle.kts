@@ -41,10 +41,9 @@ android {
 
 dependencies {
 
-    implementation("com.squareup.moshi:moshi:1.9.3")
-    implementation("com.squareup.moshi:moshi-kotlin:1.9.3")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0") // For ViewModel
+    implementation ("androidx.activity:activity-ktx:1.3.1") // For ViewModel
 
-    implementation("com.google.code.gson:gson:2.8.6") // for Json file reader
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.5")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.5")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
