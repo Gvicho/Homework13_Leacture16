@@ -1,10 +1,8 @@
 package com.example.homework13_leacture16.adapters
 
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -34,29 +32,22 @@ class FieldAdapterRecycler(private val listener: ItemListener) : ListAdapter<Fie
 
         fun bind(field: Field, position: Int){
 
-            binding.root.hint = field.hint
-
-            //so that last field doesn't have a line under text
-            if(position == currentList.size-1){
-                binding.root.background = null
-            }
-
             listener.onItemInput(field)
 
-            binding.root.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
+            binding.apply {
+                root.doOnTextChanged { text, start, before, count ->
+                    listener.onItemInputChanged( root.text.toString(),field)
                 }
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                root.hint = field.hint
 
+                //so that last field doesn't have a line under text
+                if(position == currentList.size-1){
+                    root.background = null
                 }
+            }
 
-                override fun afterTextChanged(s: Editable?) {
-                    Log.d("tag123","afterTextChange -> ${binding.root.text.toString()}")
-                    listener.onItemInputChanged( binding.root.text.toString(),field)
-                }
-            })
+
 
         }
     }
